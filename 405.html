@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Оценки: Робот Зок</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #333; }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+        .criteria { margin-bottom: 15px; }
+        label { font-size: 14px; color: #555; }
+        input[type="range"] { padding: 0; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .profile-card { background: white; padding: 15px; margin-top: 15px; border-radius: 10px; width: 100%; max-width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .profile-card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .profile-card h3 { margin: 0; color: #222; }
+        .stats { font-size: 14px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Оценить человека</h2>
+    <input type="text" id="userName" placeholder="Имя человека">
+    <input type="file" id="userPhoto" accept="image/*">
+    
+    <div id="criteriaList">
+        <div class="criteria">
+            <label>Интеллект: <span id="v1">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('v1').innerText = this.value">
+        </div>
+        <div class="criteria">
+            <label>Харизма: <span id="v2">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('v2').innerText = this.value">
+        </div>
+        <div class="criteria">
+            <label>Юмор: <span id="v3">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('v3').innerText = this.value">
+        </div>
+        <div class="criteria">
+            <label>Надежность: <span id="v4">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('v4').innerText = this.value">
+        </div>
+        <div class="criteria">
+            <label>Стиль: <span id="v5">5</span></label>
+            <input type="range" min="1" max="10" value="5" oninput="document.getElementById('v5').innerText = this.value">
+        </div>
+    </div>
+
+    <button onclick="saveProfile()">Добавить в профиль</button>
+</div>
+
+<div id="profilesContainer"></div>
+
+<script>
+    // Загружаем данные из памяти при старте
+    window.onload = displayProfiles;
+
+    function saveProfile() {
+        const name = document.getElementById('userName').value;
+        const photoInput = document.getElementById('userPhoto');
+        const ranges = document.querySelectorAll('input[type="range"]');
+        
+        if (!name) { alert("Введите имя!"); return; }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const profile = {
+                name: name,
+                photo: e.target.result,
+                scores: Array.from(ranges).map(r => r.value)
+            };
+
+            let profiles = JSON.parse(localStorage.getItem('profiles') || '[]');
+            profiles.push(profile);
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+            
+            displayProfiles();
+            // Сброс полей
+            document.getElementById('userName').value = '';
+        };
+
+        if (photoInput.files[0]) {
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            alert("Добавьте фото!");
+        }
+    }
+
+    function displayProfiles() {
+        const container = document.getElementById('profilesContainer');
+        container.innerHTML = '<h2>Сохраненные профили</h2>';
+        const profiles = JSON.parse(localStorage.getItem('profiles') || '[]');
+
+        profiles.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            card.innerHTML = `
+                <img src="${p.photo}">
+                <h3>${p.name}</h3>
+                <div class="stats">
+                    Инт: ${p.scores[0]} | Хар: ${p.scores[1]} | Юмор: ${p.scores[2]} | Над: ${p.scores[3]} | Стиль: ${p.scores[4]}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
