@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Rating System</title>
+    <style>
+        :root { --blue: #4e8cff; --purple: #a347ff; --bg: #0a0a0c; --card: #16161a; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+
+        .container { background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; border: 1px solid #2d2d35; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        h2 { text-align: center; margin-bottom: 30px; letter-spacing: 1px; color: #fff; }
+
+        .group-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 15px; display: block; border-bottom: 1px solid #2d2d35; padding-bottom: 5px; }
+
+        .param { margin-bottom: 20px; }
+        .info { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 500; }
+        .val { color: var(--blue); font-family: monospace; font-size: 1.1em; }
+        .vibe-val { color: var(--purple); }
+
+        /* Кастомные ползунки */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: #2d2d35; height: 6px; border-radius: 5px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--blue); cursor: pointer; border: 3px solid var(--card); box-shadow: 0 0 10px rgba(78, 140, 255, 0.5); }
+        .vibe-input::-webkit-slider-thumb { background: var(--purple) !important; box-shadow: 0 0 10px rgba(163, 71, 255, 0.5) !important; }
+
+        .result-card { background: linear-gradient(135deg, #1a1a20 0%, #0f0f12 100%); margin-top: 30px; padding: 20px; border-radius: 18px; border: 1px solid #333; text-align: center; }
+        .result-label { color: #888; font-size: 14px; margin-bottom: 5px; }
+        .score { font-size: 64px; font-weight: 800; line-height: 1; margin: 10px 0; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .formula-hint { font-size: 11px; color: #444; margin-top: 10px; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Оценка Человека</h2>
+
+    <span class="group-label">Базовые показатели (1-10)</span>
+
+    <div class="param">
+        <div class="info">Лицо <span class="val" id="l-face">10</span></div>
+        <input type="range" min="1" max="10" value="10" id="face">
+    </div>
+
+    <div class="param">
+        <div class="info">Фигура <span class="val" id="l-body">10</span></div>
+        <input type="range" min="1" max="10" value="10" id="body">
+    </div>
+
+    <div class="param">
+        <div class="info">Стиль / Образ <span class="val" id="l-style">10</span></div>
+        <input type="range" min="1" max="10" value="10" id="style">
+    </div>
+
+    <div class="param">
+        <div class="info">Харизма / Ум <span class="val" id="l-intel">10</span></div>
+        <input type="range" min="1" max="10" value="10" id="intel">
+    </div>
+
+    <span class="group-label">Атмосфера</span>
+    <div class="param">
+        <div class="info">Вайб <span class="val vibe-val" id="l-vibe">10</span></div>
+        <div class="info">Вайб / Индивидуальность <span class="val vibe-val" id="l-vibe">10</span></div>
+        <input type="range" min="1" max="10" value="10" id="vibe" class="vibe-input">
+    </div>
+
+    <div class="result-card">
+        <div class="result-label">ИТОГОВЫЙ СКОР</div>
+        <div class="result-label">ИТОГОВЫЙ СЧЕТ</div>
+        <div class="score" id="total">90</div>
+        <div class="formula-hint">(Sum * 1.4) * Vibe_Mult</div>
+    </div> 
